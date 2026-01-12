@@ -31,6 +31,7 @@ import profilePhoto from "@assets/9271de4dedc83313cad8f76c8b278f98_1768159283863
 import dogPhoto1 from "@assets/d647bccb827b7f34d9a33ef52a095576_1768160415110.JPG";
 import dogPhoto2 from "@assets/Screenshot_2026-01-11_at_13.36.02_1768160425298.png";
 import mbtaMapImage from "@assets/station_delay_map.png";
+import moodysManualsImage from "@assets/moodysManuals.png";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -137,27 +138,57 @@ const education = [
 const projects = [
   {
     title: "Boston MBTA Transit Analytics Dashboard",
-    description: "Built an interactive map visualization of Boston's transit system with MBTA stops overlaid by route. Click on any station to reveal real-time insights including average delay statistics, median delays, 95th percentile delays, and trip counts.",
+    description:
+      "Built an interactive geospatial dashboard of Boston’s MBTA network, overlaying stops by route and enabling station-level inspection of delay behavior. Clicking a stop reveals average, median, and 95th-percentile delays alongside observed trip volume.",
     image: mbtaMapImage,
-    skills: ["Python", "Folium", "Pandas", "Data Visualization", "Geospatial Analysis"],
-    metrics: ["229 unique trips analyzed", "Station-level delay metrics", "Interactive tooltips"]
-  },
-  {
-    title: "Titanic Survival Prediction with XGBoost",
-    description: "Developed a machine learning pipeline using XGBoost to predict passenger survival on the Titanic. Implemented feature engineering, hyperparameter tuning, and cross-validation to achieve competitive accuracy on the Kaggle leaderboard.",
-    skills: ["Python", "XGBoost", "Scikit-learn", "Feature Engineering", "Kaggle"],
-    metrics: ["Classification accuracy optimization", "Cross-validation pipeline", "Feature importance analysis"]
-  },
-  {
-    title: "RAG Document Chunking Strategies",
-    description: "Explored and compared different document chunking strategies for Retrieval-Augmented Generation systems. Analyzed the impact of chunk size, overlap, and semantic boundaries on retrieval quality and LLM response accuracy.",
-    skills: ["Python", "LangChain", "RAG", "NLP", "Document Processing"],
-    links: [
-      { label: "Chunking Analysis", url: "https://colab.research.google.com/drive/1-tRy2ooiukLY8Yqo-0orJhYrSuAOeqjz" },
-      { label: "Advanced Strategies", url: "https://colab.research.google.com/drive/1303Lws3SqVMcbq3TYP-Mms0e0mMvsEeJ" }
+    skills: [
+      "Python",
+      "Pandas",
+      "Folium",
+      "Geospatial Analytics",
+      "Data Visualization",
     ],
-    metrics: ["Multiple chunking strategies", "Retrieval quality comparison", "LLM integration"]
-  }
+    metrics: [
+      "229 unique trips analyzed",
+      "Station-level delay distributions (avg / median / p95)",
+      "Interactive tooltips for rapid exploration",
+    ],
+  },
+  {
+    title: "Titanic Survival Prediction (XGBoost)",
+    description:
+      "Developed an end-to-end machine learning pipeline with XGBoost to predict Titanic passenger survival, emphasizing feature engineering, robust validation, and model interpretability to improve generalization.",
+    skills: [
+      "Python",
+      "XGBoost",
+      "Scikit-learn",
+      "Feature Engineering",
+      "Model Evaluation",
+    ],
+    metrics: [
+      "Cross-validation pipeline to reduce overfitting",
+      "Hyperparameter tuning for improved performance",
+      "Feature importance analysis for interpretability",
+    ],
+  },
+  {
+    title: "Document Chunking Strategies for RAG",
+    description:
+      "Investigated document chunking strategies for Retrieval-Augmented Generation (RAG), analyzing how chunk size, overlap, and structure-aware boundaries influence retrieval relevance and downstream response grounding.",
+    image: moodysManualsImage,
+    skills: [
+      "Python",
+      "LangChain",
+      "RAG",
+      "NLP",
+      "Document Intelligence",
+    ],
+    metrics: [
+      "Compared multiple chunking strategies (size, overlap, structure-aware)",
+      "Evaluated retrieval quality and grounding behavior",
+      "Designed reproducible experimental workflows",
+    ],
+  },
 ];
 
 const publications = [
