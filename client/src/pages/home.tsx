@@ -18,7 +18,10 @@ import {
   Heart,
   Users,
   Sparkles,
-  ChevronRight
+  ChevronRight,
+  Layers,
+  Map,
+  FileCode2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -27,6 +30,7 @@ import heroBackground from "@assets/generated_images/abstract_data_mesh_hero_bac
 import profilePhoto from "@assets/9271de4dedc83313cad8f76c8b278f98_1768159283863.JPG";
 import dogPhoto1 from "@assets/d647bccb827b7f34d9a33ef52a095576_1768160415110.JPG";
 import dogPhoto2 from "@assets/Screenshot_2026-01-11_at_13.36.02_1768160425298.png";
+import mbtaMapImage from "@assets/station_delay_map.png";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -127,6 +131,32 @@ const education = [
     location: "Chicago, IL",
     period: "June – July 2022",
     focus: "Data Processing, Data Analytics, R Programming"
+  }
+];
+
+const projects = [
+  {
+    title: "Boston MBTA Transit Analytics Dashboard",
+    description: "Built an interactive map visualization of Boston's transit system with MBTA stops overlaid by route. Click on any station to reveal real-time insights including average delay statistics, median delays, 95th percentile delays, and trip counts.",
+    image: mbtaMapImage,
+    skills: ["Python", "Folium", "Pandas", "Data Visualization", "Geospatial Analysis"],
+    metrics: ["229 unique trips analyzed", "Station-level delay metrics", "Interactive tooltips"]
+  },
+  {
+    title: "Titanic Survival Prediction with XGBoost",
+    description: "Developed a machine learning pipeline using XGBoost to predict passenger survival on the Titanic. Implemented feature engineering, hyperparameter tuning, and cross-validation to achieve competitive accuracy on the Kaggle leaderboard.",
+    skills: ["Python", "XGBoost", "Scikit-learn", "Feature Engineering", "Kaggle"],
+    metrics: ["Classification accuracy optimization", "Cross-validation pipeline", "Feature importance analysis"]
+  },
+  {
+    title: "RAG Document Chunking Strategies",
+    description: "Explored and compared different document chunking strategies for Retrieval-Augmented Generation systems. Analyzed the impact of chunk size, overlap, and semantic boundaries on retrieval quality and LLM response accuracy.",
+    skills: ["Python", "LangChain", "RAG", "NLP", "Document Processing"],
+    links: [
+      { label: "Chunking Analysis", url: "https://colab.research.google.com/drive/1-tRy2ooiukLY8Yqo-0orJhYrSuAOeqjz" },
+      { label: "Advanced Strategies", url: "https://colab.research.google.com/drive/1303Lws3SqVMcbq3TYP-Mms0e0mMvsEeJ" }
+    ],
+    metrics: ["Multiple chunking strategies", "Retrieval quality comparison", "LLM integration"]
   }
 ];
 
@@ -265,6 +295,7 @@ export default function Home() {
               <a href="#experience" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="nav-experience">Experience</a>
               <a href="#skills" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="nav-skills">Skills</a>
               <a href="#education" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="nav-education">Education</a>
+              <a href="#projects" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="nav-projects">Projects</a>
               <a href="#impact" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="nav-impact">Impact</a>
               <a href="#contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="nav-contact">Contact</a>
             </div>
@@ -509,8 +540,105 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Project Highlights Section */}
+      <section id="projects" className="py-24 px-6">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <Layers className="w-6 h-6 text-accent" />
+              <h2 className="font-display text-3xl md:text-4xl font-bold" data-testid="section-projects">
+                Project Highlights
+              </h2>
+            </div>
+            <p className="text-muted-foreground mb-12">Select projects showcasing end-to-end data science and ML capabilities</p>
+          </motion.div>
+          
+          <div className="space-y-8">
+            {projects.map((project, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <Card className="overflow-hidden hover:shadow-lg transition-shadow" data-testid={`card-project-${index}`}>
+                  {project.image && (
+                    <div className="relative h-64 overflow-hidden bg-muted">
+                      <img 
+                        src={project.image} 
+                        alt={project.title}
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+                      <div className="absolute bottom-4 left-4 right-4">
+                        <div className="flex items-center gap-2 text-white/90">
+                          <Map className="w-4 h-4" />
+                          <span className="text-sm font-medium">Interactive Visualization</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  <div className="p-6 md:p-8">
+                    <div className="flex items-start gap-3 mb-4">
+                      {!project.image && <FileCode2 className="w-6 h-6 text-accent shrink-0 mt-1" />}
+                      <div>
+                        <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
+                        <p className="text-muted-foreground leading-relaxed">{project.description}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {project.skills.map((skill, sIndex) => (
+                        <Badge key={sIndex} variant="secondary" className="text-xs bg-accent/10 text-accent border-accent/20">
+                          {skill}
+                        </Badge>
+                      ))}
+                    </div>
+                    
+                    {project.metrics && (
+                      <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mb-4">
+                        {project.metrics.map((metric, mIndex) => (
+                          <span key={mIndex} className="flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+                            {metric}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    
+                    {project.links && (
+                      <div className="flex flex-wrap gap-3 pt-4 border-t border-border">
+                        {project.links.map((link, lIndex) => (
+                          <a
+                            key={lIndex}
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-sm text-accent hover:underline"
+                            data-testid={`link-project-${index}-${lIndex}`}
+                          >
+                            {link.label}
+                            <ExternalLink className="w-3 h-3" />
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Publications Section */}
-      <section id="publications" className="py-24 px-6">
+      <section id="publications" className="py-24 px-6 bg-muted/30">
         <div className="max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
