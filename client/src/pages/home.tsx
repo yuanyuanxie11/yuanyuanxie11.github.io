@@ -387,7 +387,7 @@ export default function Home() {
             Building intelligent systems at the intersection of 
             <span className="text-foreground font-medium"> Machine Learning</span>,
             <span className="text-foreground font-medium"> NLP</span>, and
-            <span className="text-foreground font-medium"> Cloud Infrastructure</span>
+            <span className="text-foreground font-medium"> Data-Driven Decision Making</span>
           </motion.p>
           
           <motion.div 
