@@ -28,7 +28,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install --legacy-peer-deps
 
       # For a project site (https://<user>.github.io/<repo>/) set VITE_BASE to "/<repo>/".
       # For a user site repo named <user>.github.io, you can leave it as "/".
