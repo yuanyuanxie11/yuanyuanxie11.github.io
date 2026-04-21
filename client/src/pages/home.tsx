@@ -86,10 +86,9 @@ function RotatingBadge() {
 
 // ─── Hero typing rotator ──────────────────────────────────────────────────────
 const HERO_PHRASES = [
-  "the magician who turns messy data into business clarity",
-  "fluent in Python — and in the boardroom",
-  "your bridge between models and meaningful decisions",
-  "the one who makes stakeholders care about the numbers",
+  "the magician who turns data into business clarity",
+  "your bridge between data and real decisions",
+  "turning complex data into decisions people can act on",
 ];
 
 function TypingRotator() {
@@ -124,9 +123,11 @@ function TypingRotator() {
 
   return (
     <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed min-h-[3rem] md:min-h-[3.5rem]">
-      I am{" "}
-      <span className="text-foreground font-medium">{displayed}</span>
-      <span className="inline-block w-[2px] h-5 md:h-6 bg-accent ml-0.5 animate-pulse align-middle rounded-full" />
+      <span className="whitespace-nowrap">
+        I am{" "}
+        <span className="text-foreground font-medium">{displayed}</span>
+        <span className="inline-block w-[2px] h-5 md:h-6 bg-accent ml-0.5 animate-pulse align-middle rounded-full" />
+      </span>
     </p>
   );
 }
@@ -319,7 +320,7 @@ type ProjectLink = { label: string; url: string; icon: "github" | "pdf" | "exter
 
 type Project = {
   id: string;
-  category: "Industry" | "Research" | "Academic";
+  category: "LLM" | "NLP" | "OCR" | "ML";
   title: string;
   tagline: string;
   /** Prominent impact number shown on card face */
@@ -338,14 +339,14 @@ const projects: Project[] = [
   // ── Industry ──────────────────────────────────────────────────────────────
   {
     id: "zebra-rag",
-    category: "Industry",
-    title: "Zebra Agentic RAG System",
+    category: "LLM",
+    title: "Agentic RAG System",
     tagline: "Production AI — from manual PDF navigation to <10 second troubleshooting answers",
     headline: "80%+ Fortune 500",
     skills: ["LangGraph", "Neo4j GraphRAG", "Weaviate", "Gemini VLM", "Python", "Arize Phoenix"],
     story: {
       problem: "Zebra Technologies field technicians needed instant answers buried across 2,470+ pages of printer manuals. Manual PDF navigation cost minutes per query across a global workforce serving a $5B enterprise — customers include 80%+ of the Fortune 500 across 100+ countries.",
-      approach: "Built a dual-pipeline agentic RAG: Neo4j GraphRAG (Problem→Cause→Solution traversal) + Weaviate hybrid vector search (BM25 + dense retrieval, MMR reranking). Gemini VLM extracted structured data from complex multi-column layouts using a sliding window approach. LangGraph orchestrated stateful agentic workflows with dynamic routing between pipelines. Validated via automated eval (BLEU, ROUGE-L, BERTScore, LLM-as-Judge) across 48 queries per device; monitored with Arize Phoenix.",
+      approach: "Built a dual-pipeline agentic RAG combining knowledge graph traversal (GraphRAG, following Problem→Cause→Solution chains) with traditional vector search — so the AI reasons across connected concepts rather than just retrieving similar text. A vision language model handled the messy reality of multi-column PDF layouts, extracting structured data that standard parsers get wrong. An agentic orchestration layer dynamically routes each query to the right pipeline based on question type. Validated across 48 test queries per device using both automated metrics and domain expert review — because automated scoring alone turned out to miss the reasoning quality our graph-based approach actually delivered.",
       results: [
         { label: "Embedding Similarity", value: "0.89" },
         { label: "ROUGE-L F1",          value: "45.1" },
@@ -356,8 +357,8 @@ const projects: Project[] = [
   },
   {
     id: "boss-zhipin",
-    category: "Industry",
-    title: "BOSS Zhipin Job Platform NLP",
+    category: "NLP",
+    title: "Job Platform NLP",
     tagline: "A/B tested AI-enhanced job postings → 40% lift in applicant conversion",
     headline: "+40% Conversion",
     skills: ["Python", "XGBoost", "LDA Topic Modeling", "NLP", "A/B Testing", "Sentiment Analysis"],
@@ -375,7 +376,7 @@ const projects: Project[] = [
   // ── Research ──────────────────────────────────────────────────────────────
   {
     id: "eye-tracking",
-    category: "Research",
+    category: "ML",
     title: "Consumer Trust Eye-Tracking Study",
     tagline: "Factorial experiment reveals what really drives willingness to pay for social value",
     headline: "+28% Sales Growth",
@@ -393,7 +394,7 @@ const projects: Project[] = [
   },
   {
     id: "chicago-pd",
-    category: "Research",
+    category: "ML",
     title: "Chicago PD Causal Inference",
     tagline: "Instrumental variables reveal how early discipline shapes 20-year career trajectories",
     headline: "200K+ Officers",
@@ -411,7 +412,7 @@ const projects: Project[] = [
   },
   {
     id: "moodys-ocr",
-    category: "Research",
+    category: "OCR",
     title: "Moody's Document AI Pipeline",
     tagline: "Teaching AI to read 40 years of financial manuals — layout-aware OCR at scale",
     headline: "+40% Accuracy",
@@ -431,7 +432,7 @@ const projects: Project[] = [
   // ── Academic ──────────────────────────────────────────────────────────────
   {
     id: "instacart",
-    category: "Academic",
+    category: "ML",
     title: "Instacart Market Basket Analysis",
     tagline: "Predicting grocery reorders across 3M+ transactions with tuned ensemble ML",
     headline: "PR-AUC 0.796",
@@ -450,7 +451,7 @@ const projects: Project[] = [
   },
   {
     id: "mbta",
-    category: "Academic",
+    category: "ML",
     title: "MBTA Transit Analytics Dashboard",
     tagline: "Geospatial delay analysis across Boston's entire transit network",
     headline: "Full Network",
@@ -469,7 +470,7 @@ const projects: Project[] = [
   },
   {
     id: "rag-chunking",
-    category: "Academic",
+    category: "LLM",
     title: "Document Chunking Strategies for RAG",
     tagline: "How you split text determines how well your AI answers questions",
     headline: "4 Strategies",
@@ -512,11 +513,11 @@ const skillIcons: Record<string, React.ReactNode> = {
 };
 
 const categoryColors: Record<string, string> = {
-  "Industry":  "bg-emerald-100 text-emerald-700 border-emerald-200",
-  "Research":  "bg-violet-100 text-violet-700 border-violet-200",
-  "Academic":  "bg-sky-100 text-sky-700 border-sky-200",
+  "LLM": "bg-violet-100 text-violet-700 border-violet-200 dark:bg-violet-950/40 dark:text-violet-400 dark:border-violet-800/50",
+  "NLP": "bg-sky-100 text-sky-700 border-sky-200 dark:bg-sky-950/40 dark:text-sky-400 dark:border-sky-800/50",
+  "OCR": "bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-800/50",
+  "ML":  "bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800/50",
 };
-
 
 // ─── Section definitions for side nav ────────────────────────────────────────
 const navSections = [
@@ -531,7 +532,7 @@ const navSections = [
   { id: "contact",      label: "Contact" },
 ];
 
-const ALL_CATEGORIES = ["All", "Industry", "Research", "Academic"];
+const ALL_CATEGORIES = ["All", "LLM", "NLP", "OCR", "ML"];
 
 // ─── Side navigation dots ─────────────────────────────────────────────────────
 function SideNavDots({ activeSection, onDotClick }: { activeSection: string; onDotClick: (id: string) => void }) {
@@ -792,244 +793,85 @@ function ProjectModal({ project, onClose }: { project: Project | null; onClose: 
   );
 }
 
-// ─── Academic journey timeline (About section) ───────────────────────────────
-const academicJourney = [
-  {
-    school: "Emory University",
-    degree: "BS Applied Mathematics & Economics",
-    detail: "Double Major — Dean's List",
-    period: "2019 – 2023",
-    location: "Atlanta, GA",
-    gradient: "from-sky-500 to-blue-600",
-    bg: "bg-sky-50 border-sky-200",
-    text: "text-sky-700",
-  },
-  {
-    school: "University of Chicago",
-    degree: "Data & Policy Summer Scholar",
-    detail: "Data Processing · Analytics · R Programming",
-    period: "Summer 2022",
-    location: "Chicago, IL",
-    gradient: "from-violet-500 to-purple-600",
-    bg: "bg-violet-50 border-violet-200",
-    text: "text-violet-700",
-  },
-  {
-    school: "Northwestern University",
-    degree: "MS Machine Learning & Data Science",
-    detail: "Expected December 2026",
-    period: "2024 – Present",
-    location: "Evanston, IL",
-    gradient: "from-rose-500 to-pink-600",
-    bg: "bg-rose-50 border-rose-200",
-    text: "text-rose-700",
-    current: true,
-  },
+
+// ─── Experience card colors ───────────────────────────────────────────────────
+const expCardColors = [
+  { accent: "text-emerald-600 dark:text-emerald-400", bar: "bg-emerald-500", pill: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800/50", top: "from-emerald-500/10 to-transparent" },
+  { accent: "text-violet-600 dark:text-violet-400",   bar: "bg-violet-500",  pill: "bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-950/40 dark:text-violet-400 dark:border-violet-800/50",   top: "from-violet-500/10 to-transparent" },
+  { accent: "text-sky-600 dark:text-sky-400",         bar: "bg-sky-500",     pill: "bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-950/40 dark:text-sky-400 dark:border-sky-800/50",         top: "from-sky-500/10 to-transparent" },
+  { accent: "text-amber-600 dark:text-amber-400",     bar: "bg-amber-500",   pill: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-800/50",     top: "from-amber-500/10 to-transparent" },
 ];
 
-function AcademicTimeline() {
-  const [active, setActive] = useState<number | null>(null);
-
-  return (
-    <div className="relative">
-      <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-6 flex items-center gap-2">
-        <GraduationCap className="w-4 h-4" /> Academic Journey
-      </p>
-
-      {/* Vertical connector line */}
-      <div className="absolute left-[18px] top-12 bottom-0 w-0.5 bg-gradient-to-b from-sky-400 via-violet-400 to-rose-400 opacity-40" />
-
-      <div className="space-y-5">
-        {academicJourney.map((item, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: i * 0.12 }}
-            className="relative flex gap-4"
-          >
-            {/* Node dot */}
-            <button
-              onClick={() => setActive(active === i ? null : i)}
-              className={`shrink-0 w-9 h-9 rounded-full bg-gradient-to-br ${item.gradient} flex items-center justify-center z-10 shadow-md hover:scale-110 transition-transform`}
-              aria-label={`Toggle ${item.school} details`}
-            >
-              <GraduationCap className="w-4 h-4 text-white" />
-            </button>
-
-            {/* Content */}
-            <div className="flex-1 pb-1">
-              <button
-                onClick={() => setActive(active === i ? null : i)}
-                className="text-left w-full group"
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <p className="text-sm font-semibold leading-snug group-hover:text-accent transition-colors">
-                        {item.school}
-                      </p>
-                      {item.current && (
-                        <span className="text-[9px] font-bold uppercase tracking-widest text-accent bg-accent/10 border border-accent/20 rounded-full px-1.5 py-0.5">
-                          Now
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-xs text-muted-foreground">{item.degree}</p>
-                  </div>
-                  <span className="text-[10px] text-muted-foreground/70 whitespace-nowrap shrink-0 mt-0.5">{item.period}</span>
-                </div>
-              </button>
-
-              {/* Expandable detail */}
-              <AnimatePresence>
-                {active === i && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.25, ease: "easeInOut" }}
-                    className="overflow-hidden"
-                  >
-                    <div className={`mt-2 px-3 py-2 rounded-lg border text-xs ${item.bg}`}>
-                      <p className={`font-semibold mb-0.5 ${item.text}`}>{item.detail}</p>
-                      <p className="text-muted-foreground">{item.location}</p>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ─── Experience journey timeline ──────────────────────────────────────────────
-// Ordered chronologically: oldest → newest
-const journeyOrder = [...experiences].reverse(); // Intellipro → Emory → CityU → Zebra
-
-const journeyColors = [
-  { dot: "from-amber-400 to-orange-500",  ring: "border-amber-300",  bg: "bg-amber-50 border-amber-200",  text: "text-amber-700"  },
-  { dot: "from-sky-400 to-blue-500",      ring: "border-sky-300",    bg: "bg-sky-50 border-sky-200",      text: "text-sky-700"    },
-  { dot: "from-violet-400 to-purple-500", ring: "border-violet-300", bg: "bg-violet-50 border-violet-200",text: "text-violet-700" },
-  { dot: "from-emerald-400 to-teal-500",  ring: "border-emerald-300",bg: "bg-emerald-50 border-emerald-200",text: "text-emerald-700"},
-];
-
-function ExperienceTimeline({ onOpenStory }: { onOpenStory: (exp: StoryExperience) => void }) {
-  const [activeIdx, setActiveIdx] = useState<number | null>(null);
-
-  const toggle = (i: number) => setActiveIdx(activeIdx === i ? null : i);
-
+function ExperienceCards({ onOpenStory }: { onOpenStory: (exp: StoryExperience) => void }) {
   return (
     <div className="flex flex-col h-full">
-      {/* Section header */}
+      {/* Header */}
       <div className="flex-shrink-0 mb-6">
         <div className="flex items-center gap-3 mb-1">
           <Briefcase className="w-6 h-6 text-accent" />
           <h2 className="font-display text-3xl md:text-4xl font-bold">Experience</h2>
         </div>
-        <p className="text-sm text-muted-foreground">
-          A journey through the work — click any stop to read the story.
-        </p>
+        <p className="text-sm text-muted-foreground">Click any card to read the full story.</p>
       </div>
 
-      {/* Timeline */}
-      <div className="flex-1 min-h-0 overflow-y-auto relative pr-1">
-        {/* Vertical connector — spans between first and last node */}
-        <div className="absolute left-[18px] top-5 bottom-5 w-0.5 bg-gradient-to-b from-amber-400 via-sky-400 via-violet-400 to-emerald-400 opacity-30" />
-
-        <div className="space-y-3">
-          {journeyOrder.map((exp, i) => {
-            const color = journeyColors[i];
-            const isOpen = activeIdx === i;
-
+      {/* 2×2 card grid */}
+      <div className="flex-1 min-h-0 overflow-y-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {experiences.map((exp, i) => {
+            const c = expCardColors[i % expCardColors.length];
             return (
-              <div key={i} className="relative flex gap-4">
-                {/* Node */}
-                <button
-                  onClick={() => toggle(i)}
-                  aria-expanded={isOpen}
-                  className={`shrink-0 w-9 h-9 rounded-full bg-gradient-to-br ${color.dot} flex items-center justify-center z-10 shadow-md hover:scale-110 transition-all duration-200 border-2 border-white`}
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: i * 0.08 }}
+              >
+                <Card
+                  className="relative overflow-hidden h-full flex flex-col cursor-pointer hover:shadow-lg hover:border-accent/40 transition-all duration-200 group"
+                  onClick={() => onOpenStory(exp)}
                 >
-                  <span className="text-white text-xs font-bold">{i + 1}</span>
-                </button>
+                  {/* Subtle top gradient accent */}
+                  <div className={`absolute top-0 left-0 right-0 h-1 ${c.bar}`} />
 
-                {/* Row content */}
-                <div className="flex-1 min-w-0">
-                  {/* Header row — always visible */}
-                  <button
-                    onClick={() => toggle(i)}
-                    className="text-left w-full group"
-                  >
-                    <div className="flex items-start justify-between gap-2 py-1.5">
-                      <div className="min-w-0">
-                        <p className="text-sm font-semibold leading-tight group-hover:text-accent transition-colors truncate">
-                          {exp.company}
-                        </p>
-                        <p className="text-xs text-muted-foreground truncate">{exp.title}</p>
-                      </div>
-                      <div className="flex items-center gap-1.5 shrink-0">
-                        <span className="text-[10px] text-muted-foreground/70 whitespace-nowrap hidden sm:block">
-                          {exp.period.split("–")[0].trim()}
-                        </span>
-                        <motion.div animate={{ rotate: isOpen ? 90 : 0 }} transition={{ duration: 0.2 }}>
-                          <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />
-                        </motion.div>
-                      </div>
+                  <div className="p-5 flex flex-col flex-1 pt-6">
+                    {/* Company + period */}
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <h3 className="font-display font-bold text-lg leading-tight">{exp.company}</h3>
+                      <span className="text-[10px] text-muted-foreground whitespace-nowrap shrink-0 mt-1 font-medium">
+                        {exp.period.split("–")[0].trim()}
+                      </span>
                     </div>
-                  </button>
 
-                  {/* Expandable story preview */}
-                  <AnimatePresence>
-                    {isOpen && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.28, ease: "easeInOut" }}
-                        className="overflow-hidden"
-                      >
-                        <div className={`mb-3 p-4 rounded-xl border ${color.bg}`}>
-                          {/* Location + period */}
-                          <p className={`text-[10px] font-bold uppercase tracking-widest mb-2 ${color.text}`}>
-                            {exp.location} · {exp.period}
-                          </p>
+                    {/* Role + location */}
+                    <p className={`text-xs font-semibold uppercase tracking-widest mb-1 ${c.accent}`}>{exp.title}</p>
+                    <p className="text-xs text-muted-foreground mb-4">{exp.location}</p>
 
-                          {/* Headline */}
-                          <p className="text-sm font-semibold leading-snug text-foreground mb-3 font-display">
-                            "{exp.headline}"
-                          </p>
+                    {/* Headline quote */}
+                    <p className="text-sm text-foreground/80 leading-relaxed italic mb-4 flex-1">
+                      "{exp.headline}"
+                    </p>
 
-                          {/* Impact stat */}
-                          <div className="flex items-center gap-2 mb-3">
-                            <span className="text-xl font-bold text-accent">{exp.impactStat.value}</span>
-                            <span className="text-xs text-muted-foreground leading-tight">{exp.impactStat.label}</span>
-                          </div>
+                    {/* Impact stat */}
+                    <div className="mb-4">
+                      <span className={`text-2xl font-bold ${c.accent}`}>{exp.impactStat.value}</span>
+                      <p className="text-xs text-muted-foreground leading-snug mt-0.5">{exp.impactStat.label}</p>
+                    </div>
 
-                          {/* Badges */}
-                          <div className="flex flex-wrap gap-1 mb-3">
-                            {exp.impactBadges.map((b, bi) => (
-                              <Badge key={bi} variant="outline" className="text-[10px] px-1.5 py-0">{b}</Badge>
-                            ))}
-                          </div>
+                    {/* Skill pills */}
+                    <div className="flex flex-wrap gap-1.5 mb-4">
+                      {exp.impactBadges.slice(0, 3).map((b, bi) => (
+                        <span key={bi} className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${c.pill}`}>{b}</span>
+                      ))}
+                    </div>
 
-                          {/* Full story button */}
-                          <button
-                            onClick={() => onOpenStory(exp)}
-                            className="flex items-center gap-1 text-xs font-semibold text-accent hover:text-accent/80 transition-colors group"
-                          >
-                            <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                            Read the full story
-                          </button>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </div>
+                    {/* CTA */}
+                    <div className="flex items-center gap-1 text-xs font-semibold text-accent group-hover:gap-2 transition-all">
+                      Read the full story
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </div>
+                  </div>
+                </Card>
+              </motion.div>
             );
           })}
         </div>
@@ -1044,10 +886,9 @@ function SingleProjectCard({ project, index, onOpen }: { project: Project; index
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.4, delay: Math.min(index * 0.06, 0.3) }}
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, delay: Math.min(index * 0.05, 0.25) }}
     >
       <Card className="p-5 hover:border-accent/40 transition-all duration-200 group">
         {/* Row 1: Category badge + headline stat */}
@@ -1322,52 +1163,33 @@ export default function Home() {
           style={{ scrollSnapAlign: "start" }}
           className="h-screen flex items-center justify-center px-6 bg-muted/20"
         >
-          <div className="max-w-5xl w-full">
-            <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-stretch">
-
-              {/* Left — bio text */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-                className="flex flex-col"
-              >
-                <h2 className="font-display text-3xl md:text-4xl font-bold mb-6">About Me</h2>
-                <div className="space-y-4 text-muted-foreground">
-                  <p className="text-base leading-relaxed">
-                    I don't just build models — I build systems that help people make better decisions. Whether it's getting a field technician to an answer in under 10 seconds or helping a recruiter spot hiring patterns at scale, I care deeply about the human impact on the other side of the output.
-                  </p>
-                  <p className="text-base leading-relaxed">
-                    My background sits at the intersection of mathematics, economics, and ML — which means I can go deep on architecture and still explain what it means to someone who's never seen a confusion matrix. I've shipped production RAG pipelines, designed ETL workflows on millions of records, and led cross-functional teams from research prototype to deployed product.
-                  </p>
-                  <p className="text-base leading-relaxed">
-                    At Northwestern I'm sharpening my ML fundamentals and pushing the edges of what agentic AI can do. My honest belief: the most important skill in data science isn't modeling — it's knowing which question to ask first.
-                  </p>
-                </div>
-                <div className="flex flex-wrap gap-2 mt-6">
-                  {["Agentic AI", "RAG Systems", "ML Engineering", "Cross-functional Leadership", "Research"].map((tag) => (
-                    <span key={tag} className="px-3 py-1 bg-accent/10 border border-accent/20 text-accent rounded-full text-xs font-medium">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </motion.div>
-
-              {/* Right — academic journey timeline */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="flex flex-col"
-              >
-                <div className="bg-card/60 rounded-2xl border border-border/60 p-6 flex-1">
-                  <AcademicTimeline />
-                </div>
-              </motion.div>
-
-            </div>
+          <div className="max-w-3xl w-full">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              <h2 className="font-display text-3xl md:text-4xl font-bold mb-8">About Me</h2>
+              <div className="space-y-4 text-muted-foreground">
+                <p className="text-base leading-relaxed">
+                  I am passionate about building intelligent systems that create real business and human impact. My work goes beyond developing models — I focus on delivering solutions that help people make faster, smarter, and more confident decisions, whether that means improving access to technical knowledge, uncovering patterns in large-scale data, or translating analytics into strategy.
+                </p>
+                <p className="text-base leading-relaxed">
+                  My background in mathematics, economics, and machine learning allows me to combine strong technical depth with business judgment. I have experience building production RAG systems, designing scalable ETL pipelines, and developing evaluation frameworks to measure AI quality, reliability, and performance. I believe successful AI is not only about generation, but also about rigorous evaluation, continuous improvement, and ensuring outputs are trustworthy in real-world settings.
+                </p>
+                <p className="text-base leading-relaxed">
+                  I also bring strong communication and leadership skills. I have experience presenting insights and recommendations to senior stakeholders — including C-suite leadership — translating complex technical findings into clear business decisions. I work effectively across technical and non-technical teams, align priorities, and help move projects from early ideas to successful execution. I am energized by solving meaningful problems, leading with curiosity, and turning advanced technology into measurable results.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2 mt-8">
+                {["Agentic AI", "RAG Systems", "ML Engineering", "Cross-functional Leadership", "Evaluation Frameworks"].map((tag) => (
+                  <span key={tag} className="px-3 py-1.5 bg-accent/10 border border-accent/20 text-accent rounded-full text-sm font-medium">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
           </div>
         </section>
 
@@ -1388,8 +1210,8 @@ export default function Home() {
           style={{ scrollSnapAlign: "start" }}
           className="h-screen flex flex-col overflow-hidden bg-muted/20"
         >
-          <div className="flex-1 min-h-0 max-w-4xl mx-auto w-full px-6 pt-20 pb-8 flex flex-col">
-            <ExperienceTimeline onOpenStory={setSelectedExp} />
+          <div className="flex-1 min-h-0 max-w-5xl mx-auto w-full px-6 pt-20 pb-8 flex flex-col">
+            <ExperienceCards onOpenStory={setSelectedExp} />
           </div>
         </section>
 
