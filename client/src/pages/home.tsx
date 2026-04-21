@@ -52,6 +52,85 @@ const stagger = {
   animate: { transition: { staggerChildren: 0.1 } }
 };
 
+// ─── Hero rotating badge ──────────────────────────────────────────────────────
+const BADGE_ROLES = ["Data Scientist", "ML Engineer", "AI Architect"];
+
+function RotatingBadge() {
+  const [roleIndex, setRoleIndex] = useState(0);
+
+  useEffect(() => {
+    const t = setInterval(() => setRoleIndex((i) => (i + 1) % BADGE_ROLES.length), 2200);
+    return () => clearInterval(t);
+  }, []);
+
+  return (
+    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary border border-border text-sm font-medium overflow-hidden">
+      <Brain className="w-3.5 h-3.5 text-accent shrink-0" />
+      <span className="relative inline-block h-5 overflow-hidden w-36">
+        <AnimatePresence mode="wait">
+          <motion.span
+            key={roleIndex}
+            initial={{ y: "100%", opacity: 0 }}
+            animate={{ y: "0%", opacity: 1 }}
+            exit={{ y: "-100%", opacity: 0 }}
+            transition={{ duration: 0.35, ease: "easeInOut" }}
+            className="absolute inset-0 flex items-center"
+          >
+            {BADGE_ROLES[roleIndex]}
+          </motion.span>
+        </AnimatePresence>
+      </span>
+    </div>
+  );
+}
+
+// ─── Hero typing rotator ──────────────────────────────────────────────────────
+const HERO_PHRASES = [
+  "the magician who turns messy data into business clarity",
+  "fluent in Python — and in the boardroom",
+  "your bridge between models and meaningful decisions",
+  "the one who makes stakeholders care about the numbers",
+];
+
+function TypingRotator() {
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [displayed, setDisplayed] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    const current = HERO_PHRASES[phraseIndex];
+    if (isPaused) {
+      const t = setTimeout(() => { setIsPaused(false); setIsDeleting(true); }, 2000);
+      return () => clearTimeout(t);
+    }
+    if (!isDeleting && displayed.length < current.length) {
+      const t = setTimeout(() => setDisplayed(current.slice(0, displayed.length + 1)), 55);
+      return () => clearTimeout(t);
+    }
+    if (!isDeleting && displayed.length === current.length) {
+      setIsPaused(true);
+      return;
+    }
+    if (isDeleting && displayed.length > 0) {
+      const t = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 28);
+      return () => clearTimeout(t);
+    }
+    if (isDeleting && displayed.length === 0) {
+      setIsDeleting(false);
+      setPhraseIndex((phraseIndex + 1) % HERO_PHRASES.length);
+    }
+  }, [displayed, isDeleting, isPaused, phraseIndex]);
+
+  return (
+    <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed min-h-[3rem] md:min-h-[3.5rem]">
+      I am{" "}
+      <span className="text-foreground font-medium">{displayed}</span>
+      <span className="inline-block w-[2px] h-5 md:h-6 bg-accent ml-0.5 animate-pulse align-middle rounded-full" />
+    </p>
+  );
+}
+
 // ─── Data ─────────────────────────────────────────────────────────────────────
 const skills = {
   "Machine Learning & AI": [
@@ -438,40 +517,6 @@ const categoryColors: Record<string, string> = {
   "Academic":  "bg-sky-100 text-sky-700 border-sky-200",
 };
 
-const funFacts = [
-  {
-    emoji: "🐾",
-    category: "Dog Mom",
-    front: "I have a four-legged co-founder",
-    back: "My dog has attended every single late-night debugging session — mostly asleep, but present. She has an uncanny ability to demand a walk at exactly the moment I'm most stuck on a problem. She's usually right. Best productivity hack I've found.",
-    color: "from-violet-100 to-purple-50 border-violet-200",
-    textColor: "text-violet-700",
-  },
-  {
-    emoji: "🎾",
-    category: "Tennis",
-    front: "I bring data brain to the tennis court",
-    back: "After every match I lose, I spend time analyzing what went wrong — serve placement, footwork patterns, when I started rushing. My friends say this is \"too much.\" My win rate says otherwise. Tennis taught me that consistency beats brilliance every time.",
-    color: "from-emerald-100 to-green-50 border-emerald-200",
-    textColor: "text-emerald-700",
-  },
-  {
-    emoji: "🌏",
-    category: "Traveller",
-    front: "Hong Kong rewired how I think",
-    back: "Living and working in Hong Kong for 18 months taught me that the same data point tells completely different stories depending on who's reading it and what they've lived. Good data science requires cultural fluency, not just statistical fluency. I'm still learning both.",
-    color: "from-sky-100 to-blue-50 border-sky-200",
-    textColor: "text-sky-700",
-  },
-  {
-    emoji: "🍜",
-    category: "Food & Family",
-    front: "My best ideas come from dinner tables",
-    back: "In my family, a meal isn't over until everyone has argued at least once and changed their mind at least once. Long dinners with too many dishes and no agenda are where I've had some of my clearest thinking. There's something about unhurried conversation that unlocks things a focused work session never does.",
-    color: "from-rose-100 to-orange-50 border-rose-200",
-    textColor: "text-rose-700",
-  },
-];
 
 // ─── Section definitions for side nav ────────────────────────────────────────
 const navSections = [
@@ -993,47 +1038,74 @@ function ExperienceTimeline({ onOpenStory }: { onOpenStory: (exp: StoryExperienc
   );
 }
 
-// ─── Compact project card ─────────────────────────────────────────────────────
-function CompactProjectCard({ project, index, onOpen }: { project: Project; index: number; onOpen: () => void }) {
+// ─── Single-column project card ───────────────────────────────────────────────
+function SingleProjectCard({ project, index, onOpen }: { project: Project; index: number; onOpen: () => void }) {
+  const [expanded, setExpanded] = useState(false);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.4, delay: index * 0.07 }}
-      className="h-full"
+      transition={{ duration: 0.4, delay: Math.min(index * 0.06, 0.3) }}
     >
-      <Card
-        className="p-4 h-full hover:shadow-lg hover:border-accent/40 transition-all duration-200 cursor-pointer group flex flex-col"
-        onClick={onOpen}
-      >
-        {/* Category + headline impact on same row */}
-        <div className="flex items-start justify-between gap-2 mb-2">
-          <span className={`inline-block text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full border ${categoryColors[project.category] ?? "bg-muted text-muted-foreground border-border"}`}>
+      <Card className="p-5 hover:border-accent/40 transition-all duration-200 group">
+        {/* Row 1: Category badge + headline stat */}
+        <div className="flex items-center justify-between gap-3 mb-3">
+          <span className={`inline-block text-[10px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full border ${categoryColors[project.category] ?? "bg-muted text-muted-foreground border-border"}`}>
             {project.category}
           </span>
-          <span className="text-base font-bold text-accent leading-tight shrink-0 text-right">
-            {project.headline}
-          </span>
+          <span className="text-sm font-bold text-accent shrink-0">{project.headline}</span>
         </div>
 
-        <h3 className="font-semibold text-sm leading-snug mb-1">{project.title}</h3>
-        <p className="text-xs text-muted-foreground line-clamp-2 flex-1 mb-3">{project.tagline}</p>
+        {/* Title + tagline */}
+        <h3 className="font-semibold text-base leading-snug mb-1">{project.title}</h3>
+        <p className="text-sm text-muted-foreground mb-3 leading-relaxed">{project.tagline}</p>
 
-        {/* 2 key metrics */}
-        <div className="flex gap-1.5 mb-3">
+        {/* 2 key metrics inline */}
+        <div className="flex gap-3 mb-3">
           {project.story.results.slice(0, 2).map((r, i) => (
-            <div key={i} className="flex flex-col items-center bg-muted/60 rounded-lg px-2 py-1 min-w-[52px]">
-              <span className="text-xs font-bold leading-tight">{r.value}</span>
-              <span className="text-[9px] text-muted-foreground uppercase tracking-wide leading-tight text-center">{r.label}</span>
+            <div key={i} className="bg-muted/60 rounded-lg px-3 py-1.5 text-center min-w-[80px]">
+              <span className="text-sm font-bold leading-tight block">{r.value}</span>
+              <span className="text-[9px] text-muted-foreground uppercase tracking-wide">{r.label}</span>
             </div>
           ))}
         </div>
 
-        <span className="flex items-center gap-1 text-xs text-accent font-medium mt-auto">
-          Read the story
-          <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-        </span>
+        {/* Learn more toggle */}
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="flex items-center gap-1.5 text-xs font-medium text-accent hover:text-accent/80 transition-colors"
+        >
+          <motion.div animate={{ rotate: expanded ? 180 : 0 }} transition={{ duration: 0.2 }}>
+            <ChevronDown className="w-3.5 h-3.5" />
+          </motion.div>
+          {expanded ? "Show less" : "Learn more"}
+        </button>
+
+        {/* Expandable summary */}
+        <AnimatePresence>
+          {expanded && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+              className="overflow-hidden"
+            >
+              <div className="mt-3 pt-3 border-t border-border/60">
+                <p className="text-sm text-muted-foreground leading-relaxed mb-3">{project.story.problem}</p>
+                <button
+                  onClick={onOpen}
+                  className="flex items-center gap-1 text-xs font-semibold text-accent hover:text-accent/80 transition-colors group"
+                >
+                  Full story
+                  <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </Card>
     </motion.div>
   );
@@ -1074,10 +1146,10 @@ function ProjectsSection({ onOpenProject }: { onOpenProject: (project: Project) 
       </div>
 
       <div className="flex-1 min-h-0 overflow-y-auto">
-        <motion.div layout className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+        <motion.div layout className="grid grid-cols-1 gap-3 max-w-2xl mx-auto">
           <AnimatePresence mode="popLayout">
             {filtered.map((project, i) => (
-              <CompactProjectCard
+              <SingleProjectCard
                 key={project.id}
                 project={project}
                 index={i}
@@ -1091,50 +1163,6 @@ function ProjectsSection({ onOpenProject }: { onOpenProject: (project: Project) 
   );
 }
 
-// ─── Flip card component ──────────────────────────────────────────────────────
-function FlipCard({ fact, index }: { fact: typeof funFacts[0]; index: number }) {
-  const [flipped, setFlipped] = useState(false);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.4, delay: index * 0.1 }}
-      className="cursor-pointer"
-      style={{ perspective: 1000 }}
-      onClick={() => setFlipped(!flipped)}
-    >
-      <motion.div
-        animate={{ rotateY: flipped ? 180 : 0 }}
-        transition={{ duration: 0.55, ease: [0.4, 0, 0.2, 1] }}
-        style={{ transformStyle: "preserve-3d", position: "relative", width: "100%", paddingBottom: "100%" }}
-      >
-        {/* Front */}
-        <div
-          className={`absolute inset-0 rounded-2xl border bg-gradient-to-br ${fact.color} p-4 flex flex-col justify-between`}
-          style={{ backfaceVisibility: "hidden" }}
-        >
-          <span className="text-3xl">{fact.emoji}</span>
-          <div>
-            <p className={`text-xs font-bold uppercase tracking-widest mb-1 ${fact.textColor}`}>{fact.category}</p>
-            <p className="text-sm font-semibold text-foreground leading-snug">{fact.front}</p>
-          </div>
-          <p className="text-[9px] text-muted-foreground">Tap to flip ↗</p>
-        </div>
-        {/* Back */}
-        <div
-          className="absolute inset-0 rounded-2xl border bg-foreground p-4 flex flex-col justify-between"
-          style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
-        >
-          <span className="text-2xl">{fact.emoji}</span>
-          <p className="text-xs text-background/90 leading-relaxed">{fact.back}</p>
-          <p className="text-[9px] text-background/40">Tap to flip back</p>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-}
 
 // ─── Home page ────────────────────────────────────────────────────────────────
 export default function Home() {
@@ -1252,22 +1280,16 @@ export default function Home() {
             </motion.div>
 
             <motion.div variants={fadeInUp} className="mb-4">
-              <Badge variant="secondary" className="px-4 py-1.5 text-sm font-medium">
-                <Database className="w-3.5 h-3.5 mr-2" />
-                Data Scientist & ML Engineer
-              </Badge>
+              <RotatingBadge />
             </motion.div>
 
             <motion.h1 variants={fadeInUp} className="font-display text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6">
               Yuanyuan Xie
             </motion.h1>
 
-            <motion.p variants={fadeInUp} className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed">
-              Building intelligent systems at the intersection of
-              <span className="text-foreground font-medium"> Machine Learning</span>,
-              <span className="text-foreground font-medium"> NLP</span>, and
-              <span className="text-foreground font-medium"> Data-Driven Decision Making</span>
-            </motion.p>
+            <motion.div variants={fadeInUp}>
+              <TypingRotator />
+            </motion.div>
 
             <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button size="lg" className="gap-2 px-8" onClick={() => scrollToSection("contact")}>
@@ -1301,7 +1323,7 @@ export default function Home() {
           className="h-screen flex items-center justify-center px-6 bg-muted/20"
         >
           <div className="max-w-5xl w-full">
-            <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-start">
+            <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-stretch">
 
               {/* Left — bio text */}
               <motion.div
@@ -1309,18 +1331,22 @@ export default function Home() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
+                className="flex flex-col"
               >
                 <h2 className="font-display text-3xl md:text-4xl font-bold mb-6">About Me</h2>
                 <div className="space-y-4 text-muted-foreground">
                   <p className="text-base leading-relaxed">
-                    I'm a Data Scientist and Machine Learning Engineer pursuing my MS in Machine Learning and Data Science at Northwestern University. With a foundation in Applied Mathematics and Economics from Emory, I bridge theoretical rigor with practical implementation.
+                    I don't just build models — I build systems that help people make better decisions. Whether it's getting a field technician to an answer in under 10 seconds or helping a recruiter spot hiring patterns at scale, I care deeply about the human impact on the other side of the output.
                   </p>
                   <p className="text-base leading-relaxed">
-                    My expertise spans building production-ready RAG systems, ETL pipelines at scale, and deploying ML models on cloud infrastructure. I'm driven by making AI accessible — and understandable — to anyone who needs it.
+                    My background sits at the intersection of mathematics, economics, and ML — which means I can go deep on architecture and still explain what it means to someone who's never seen a confusion matrix. I've shipped production RAG pipelines, designed ETL workflows on millions of records, and led cross-functional teams from research prototype to deployed product.
+                  </p>
+                  <p className="text-base leading-relaxed">
+                    At Northwestern I'm sharpening my ML fundamentals and pushing the edges of what agentic AI can do. My honest belief: the most important skill in data science isn't modeling — it's knowing which question to ask first.
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2 mt-6">
-                  {["Graph RAG", "NLP & LLMs", "Statistical Modeling", "Cloud ML", "Research"].map((tag) => (
+                  {["Agentic AI", "RAG Systems", "ML Engineering", "Cross-functional Leadership", "Research"].map((tag) => (
                     <span key={tag} className="px-3 py-1 bg-accent/10 border border-accent/20 text-accent rounded-full text-xs font-medium">
                       {tag}
                     </span>
@@ -1334,8 +1360,11 @@ export default function Home() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.1 }}
+                className="flex flex-col"
               >
-                <AcademicTimeline />
+                <div className="bg-card/60 rounded-2xl border border-border/60 p-6 flex-1">
+                  <AcademicTimeline />
+                </div>
               </motion.div>
 
             </div>
@@ -1551,30 +1580,74 @@ export default function Home() {
         >
           <div className="flex-1 min-h-0 max-w-5xl mx-auto w-full px-6 pt-20 pb-8 flex flex-col">
             {/* Header */}
-            <div className="flex-shrink-0 mb-6">
+            <div className="flex-shrink-0 mb-8">
               <div className="flex items-center gap-3 mb-1.5">
                 <Heart className="w-6 h-6 text-accent" />
                 <h2 className="font-display text-3xl md:text-4xl font-bold">Beyond the Data</h2>
               </div>
               <p className="text-sm text-muted-foreground">
-                The things that keep me curious, grounded, and occasionally humbled.{" "}
-                <span className="font-medium text-foreground">Flip each card.</span>
+                The things that ground me, inspire me, and remind me there's a world outside the terminal.
               </p>
             </div>
 
-            {/* Flip cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 flex-shrink-0 mb-6">
-              {funFacts.map((fact, i) => <FlipCard key={i} fact={fact} index={i} />)}
-            </div>
+            {/* Two-column layout */}
+            <div className="flex-1 min-h-0 grid md:grid-cols-2 gap-8 overflow-hidden">
 
-            {/* Dog photos */}
-            <div className="flex gap-4 justify-center flex-1 min-h-0">
-              <motion.div whileHover={{ scale: 1.02 }} className="rounded-2xl overflow-hidden shadow-lg flex-1 max-w-xs">
-                <img src={dogPhoto1} alt="Sunset walk with my dog" className="w-full h-full object-cover" />
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.02 }} className="rounded-2xl overflow-hidden shadow-lg flex-1 max-w-xs">
-                <img src={dogPhoto2} alt="My happy companion" className="w-full h-full object-cover" />
-              </motion.div>
+              {/* Left — personal narrative cards */}
+              <div className="flex flex-col gap-5 overflow-y-auto">
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <Card className="p-5 border-violet-200 bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-950/30 dark:to-purple-950/20 dark:border-violet-800/40">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-2xl">🐾</span>
+                      <h3 className="font-semibold text-violet-700 dark:text-violet-400">Dog Mom, First and Foremost</h3>
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      My dog has attended every late-night debugging session — mostly asleep, but always present. She has an uncanny talent for demanding a walk at exactly the moment I'm most stuck on a problem. She's usually right. Best productivity reset I've found.
+                    </p>
+                  </Card>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: 0.12 }}
+                >
+                  <Card className="p-5 border-sky-200 bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-950/30 dark:to-blue-950/20 dark:border-sky-800/40">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-2xl">🌏</span>
+                      <h3 className="font-semibold text-sky-700 dark:text-sky-400">18 Months in Hong Kong</h3>
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Living and working in Hong Kong rewired how I think about data. The same number tells completely different stories depending on who's reading it and what they've lived. Good data science requires cultural fluency — not just statistical fluency. I'm still learning both.
+                    </p>
+                  </Card>
+                </motion.div>
+              </div>
+
+              {/* Right — dog photos */}
+              <div className="grid grid-rows-2 gap-4 min-h-0 overflow-hidden">
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 0.2 }}
+                  className="rounded-2xl overflow-hidden shadow-lg"
+                >
+                  <img src={dogPhoto1} alt="My dog" className="w-full h-full object-cover" />
+                </motion.div>
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 0.2 }}
+                  className="rounded-2xl overflow-hidden shadow-lg"
+                >
+                  <img src={dogPhoto2} alt="My happy companion" className="w-full h-full object-cover" />
+                </motion.div>
+              </div>
+
             </div>
           </div>
         </section>
